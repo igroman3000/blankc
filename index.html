@@ -15,7 +15,6 @@ html, body {
     background: radial-gradient(circle at center, #111 0%, #000 70%);
 }
 
-/* Фон с частицами */
 #bg-canvas {
     position: absolute;
     top: 0;
@@ -26,7 +25,6 @@ html, body {
     pointer-events: none;
 }
 
-/* Кнопка скачивания */
 .download-btn {
     position: absolute;
     bottom: 40px;
@@ -56,7 +54,6 @@ html, body {
     box-shadow: 0 0 35px rgba(0, 255, 255, 0.8), 0 0 70px rgba(255, 0, 255, 0.6);
 }
 
-/* Модальное окно инструкции */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -108,7 +105,6 @@ html, body {
     margin: 10px 0;
 }
 
-/* Зеленая плашка про вирусы */
 .virus-free-box {
     background: rgba(0, 255, 136, 0.1);
     border: 2px solid #00ff88;
@@ -131,7 +127,6 @@ html, body {
     line-height: 1.5;
 }
 
-/* Предупреждение про файл .spec */
 .warning-box {
     background: rgba(255, 0, 85, 0.12);
     border-left: 4px solid #ff0055;
@@ -173,7 +168,6 @@ html, body {
     box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
 }
 
-/* Класс для плавного скрытия интерфейса */
 .hide-ui {
     opacity: 0 !important;
     pointer-events: none;
@@ -201,25 +195,16 @@ html, body {
 }
 </style>
 </head>
-
 <body>
 
-<!-- Задний план (частицы) -->
 <canvas id="bg-canvas"></canvas>
-
-<!-- Логотип -->
 <div id="dvd">DVD</div>
-
-<!-- Кнопка скачивания -->
 <button class="download-btn" id="dl-btn">СКАЧАТЬ СКРИНСЕЙВЕР</button>
 
-<!-- Всплывающее окно с инструкцией -->
 <div class="modal-overlay" id="instruction-modal">
     <div class="modal-card">
         <h2>📦 Инструкция и Безопасность</h2>
-        
         <p>Перед тем как скачать ZIP-архив с программой, пожалуйста, ознакомьтесь с информацией ниже:</p>
-
         <div class="virus-free-box">
             <div class="virus-title">🛡️ ПРОГРАММА НЕ СОДЕРЖИТ ВИРУСОВ!</div>
             <div class="virus-text">
@@ -227,14 +212,12 @@ html, body {
                 <strong>Не паникуйте, это нормально!</strong> Просто нажмите кнопку «Подробнее» или «Сохранить в любом случае» и спокойно запускайте файл.
             </div>
         </div>
-        
         <div class="warning-box">
             <div class="warning-title">⚠️ ВАЖНО: Обязательно распакуйте архив!</div>
             <div class="warning-text">
                 Перенесите из ZIP-архива <strong>все файлы целиком</strong> в отдельную папку. Ни при каких обстоятельствах <strong>не удаляйте файл "screensaver.spec"</strong>, иначе программа сломается и не сможет запуститься!
             </div>
         </div>
-        
         <p>Для запуска скринсейвера используйте файл <strong>screensaver.exe</strong> после распаковки.</p>
         <button class="confirm-btn" id="start-download">Я всё понял, скачать скринсейвер</button>
     </div>
@@ -271,7 +254,6 @@ function animateDVD() {
     requestAnimationFrame(animateDVD);
 }
 animateDVD();
-
 // --- КОД ЗАДНЕГО ПЛАНА (ЧАСТИЦЫ) ---
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
@@ -279,7 +261,8 @@ let particles = [];
 const mouse = { x: null, y: null, radius: 120 };
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     initParticles();
 }
 
@@ -293,35 +276,57 @@ class Particle {
         this.color = Math.random() > 0.5 ? '#ff00ff' : '#00ffff';
     }
     update() {
-        this.x += this.speedX; this.y += this.speedY;
+        this.x += this.speedX;
+        this.y += this.speedY;
+
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
         if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-        if (mouse.x && mouse.y) {
-            let dx = mouse.x - this.x; let dy = mouse.y - this.y;
+
+        if (mouse.x !== null && mouse.y !== null) {
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < mouse.radius) { this.x -= dx * 0.02; this.y -= dy * 0.02; }
+            
+            if (distance < mouse.radius && distance > 0) {
+                let force = (mouse.radius - distance) / mouse.radius;
+                this.x -= (dx / distance) * force * 2;
+                this.y -= (dy / distance) * force * 2;
+            }
         }
     }
     draw() {
-        ctx.fillStyle = this.color; ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
     }
 }
 
 function initParticles() {
     particles = [];
     const count = Math.floor((canvas.width * canvas.height) / 8000);
-    for (let i = 0; i < count; i++) { particles.push(new Particle()); }
+    for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+    }
 }
 
 function animateBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => { p.update(); p.draw(); });
+    particles.forEach(p => {
+        p.update();
+        p.draw();
+    });
     requestAnimationFrame(animateBackground);
 }
 
-window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
-window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+});
+window.addEventListener('mouseout', () => {
+    mouse.x = null;
+    mouse.y = null;
+});
 
 // --- КОД ЛОГИКИ ОКНА И СКАЧИВАНИЯ ---
 const dlBtn = document.getElementById('dl-btn');
@@ -356,3 +361,27 @@ function resetTimer() {
     dlBtn.classList.remove('hide-ui');
     document.body.style.cursor = 'default';
     clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        if (!isModalOpen) {
+            dlBtn.classList.add('hide-ui');
+            document.body.style.cursor = 'none';
+        }
+    }, 2500);
+}
+
+window.addEventListener('mousemove', resetTimer);
+window.addEventListener('mousedown', resetTimer);
+window.addEventListener('keydown', resetTimer);
+
+window.addEventListener("resize", () => {
+    x = Math.min(x, window.innerWidth - dvd.offsetWidth);
+    y = Math.min(y, window.innerHeight - dvd.offsetHeight);
+    resizeCanvas();
+});
+
+resizeCanvas();
+animateBackground();
+resetTimer();
+</script>
+</body>
+</html>
