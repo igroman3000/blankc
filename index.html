@@ -254,7 +254,41 @@ function animateDVD() {
     requestAnimationFrame(animateDVD);
 }
 animateDVD();
-// --- КОД ЗАДНЕГО ПЛАНА (ЧАСТИЦЫ) ---
+// --- 1. КОД ДЛЯ DVD ЛОГОТИПА ---
+const dvd = document.getElementById("dvd");
+let x = Math.random() * (window.innerWidth - 200);
+let y = Math.random() * (window.innerHeight - 100);
+let vx = 3.2;
+let vy = 2.6;
+const MAX_SPEED = 6;
+
+function clampSpeed() {
+    vx = Math.max(-MAX_SPEED, Math.min(MAX_SPEED, vx));
+    vy = Math.max(-MAX_SPEED, Math.min(MAX_SPEED, vy));
+}
+
+function randomBounce() {
+    vx += (Math.random() - 0.5) * 0.8;
+    vy += (Math.random() - 0.5) * 0.8;
+    clampSpeed();
+}
+
+function animateDVD() {
+    x += vx; 
+    y += vy;
+    const w = dvd.offsetWidth; 
+    const h = dvd.offsetHeight;
+    if (x <= 0) { x = 0; vx = Math.abs(vx); randomBounce(); } 
+    else if (x + w >= window.innerWidth) { x = window.innerWidth - w; vx = -Math.abs(vx); randomBounce(); }
+    if (y <= 0) { y = 0; vy = Math.abs(vy); randomBounce(); } 
+    else if (y + h >= window.innerHeight) { y = window.innerHeight - h; vy = -Math.abs(vy); randomBounce(); }
+    dvd.style.left = x + "px"; 
+    dvd.style.top = y + "px";
+    requestAnimationFrame(animateDVD);
+}
+animateDVD();
+
+// --- 2. КОД ЗАДНЕГО ПЛАНА (ЧАСТИЦЫ) ---
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
@@ -278,15 +312,12 @@ class Particle {
     update() {
         this.x += this.speedX;
         this.y += this.speedY;
-
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
         if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-
         if (mouse.x !== null && mouse.y !== null) {
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
-            
             if (distance < mouse.radius && distance > 0) {
                 let force = (mouse.radius - distance) / mouse.radius;
                 this.x -= (dx / distance) * force * 2;
@@ -305,30 +336,19 @@ class Particle {
 function initParticles() {
     particles = [];
     const count = Math.floor((canvas.width * canvas.height) / 8000);
-    for (let i = 0; i < count; i++) {
-        particles.push(new Particle());
-    }
+    for (let i = 0; i < count; i++) { particles.push(new Particle()); }
 }
 
 function animateBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-        p.update();
-        p.draw();
-    });
+    particles.forEach(p => { p.update(); p.draw(); });
     requestAnimationFrame(animateBackground);
 }
 
-window.addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-});
-window.addEventListener('mouseout', () => {
-    mouse.x = null;
-    mouse.y = null;
-});
+window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
 
-// --- КОД ЛОГИКИ ОКНА И СКАЧИВАНИЯ ---
+// --- 3. КОД ЛОГИКИ ОКНА И СКАЧИВАНИЯ ---
 const dlBtn = document.getElementById('dl-btn');
 const modal = document.getElementById('instruction-modal');
 const startDownloadBtn = document.getElementById('start-download');
@@ -345,14 +365,12 @@ dlBtn.addEventListener('click', () => {
 startDownloadBtn.addEventListener('click', () => {
     modal.classList.remove('active');
     isModalOpen = false;
-    
     const link = document.createElement('a');
     link.href = 'screensaver.zip'; 
     link.download = 'screensaver.zip';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
     resetTimer();
 });
 
@@ -372,7 +390,6 @@ function resetTimer() {
 window.addEventListener('mousemove', resetTimer);
 window.addEventListener('mousedown', resetTimer);
 window.addEventListener('keydown', resetTimer);
-
 window.addEventListener("resize", () => {
     x = Math.min(x, window.innerWidth - dvd.offsetWidth);
     y = Math.min(y, window.innerHeight - dvd.offsetHeight);
@@ -382,6 +399,3 @@ window.addEventListener("resize", () => {
 resizeCanvas();
 animateBackground();
 resetTimer();
-</script>
-</body>
-</html>
