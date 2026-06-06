@@ -26,22 +26,22 @@ html, body {
     pointer-events: none;
 }
 
-/* Увеличенная и улучшенная кнопка скачивания */
+/* Кнопка скачивания */
 .download-btn {
     position: absolute;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
-    padding: 18px 45px; /* Увеличили внутренние отступы */
-    font-size: 22px;     /* Сделали шрифт больше */
+    padding: 18px 45px;
+    font-size: 22px;
     font-family: Arial, sans-serif;
-    font-weight: 900;    /* Жирный шрифт */
+    font-weight: 900;
     letter-spacing: 1px;
     color: #fff;
     background: linear-gradient(45deg, #ff00ff, #00ffff);
     border: none;
-    border-radius: 40px; /* Округлили под новый размер */
+    border-radius: 40px;
     cursor: pointer;
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.5), 0 0 50px rgba(255, 0, 255, 0.3);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -52,7 +52,7 @@ html, body {
 }
 
 .download-btn:hover {
-    transform: translateX(-50%) scale(1.08); /* Чуть больше масштаб при наведении */
+    transform: translateX(-50%) scale(1.08);
     box-shadow: 0 0 35px rgba(0, 255, 255, 0.8), 0 0 70px rgba(255, 0, 255, 0.6);
 }
 
@@ -81,54 +81,74 @@ html, body {
 
 .modal-card {
     background: #141414;
-    border: 3px solid #ff00ff;
+    border: 3px solid #00ffff;
     border-radius: 20px;
     padding: 35px;
     max-width: 500px;
     width: 90%;
     font-family: Arial, sans-serif;
     color: #fff;
-    box-shadow: 0 0 40px rgba(255, 0, 255, 0.4);
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
     text-align: center;
 }
 
 .modal-card h2 {
     color: #00ffff;
     margin-top: 0;
-    font-size: 28px;
+    font-size: 26px;
     text-transform: uppercase;
     letter-spacing: 1px;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
 .modal-card p {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.6;
     color: #e0e0e0;
+    margin: 10px 0;
 }
 
-/* Важная плашка с предупреждением про файл .spec */
-.warning-box {
-    background: rgba(255, 0, 85, 0.15);
-    border: 2px dashed #ff0055;
+/* Зеленая плашка про вирусы */
+.virus-free-box {
+    background: rgba(0, 255, 136, 0.1);
+    border: 2px solid #00ff88;
     border-radius: 10px;
     padding: 15px;
-    margin: 25px 0;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.virus-title {
+    color: #00ff88;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.virus-text {
+    font-size: 14px;
+    color: #adffda;
+    line-height: 1.5;
+}
+
+/* Предупреждение про файл .spec */
+.warning-box {
+    background: rgba(255, 0, 85, 0.12);
+    border-left: 4px solid #ff0055;
+    padding: 12px;
+    margin: 18px 0;
     text-align: left;
 }
 
 .warning-title {
     color: #ff3377;
     font-weight: bold;
-    font-size: 18px;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 16px;
+    margin-bottom: 4px;
 }
 
 .warning-text {
-    font-size: 15px;
+    font-size: 14px;
     color: #ff99bb;
     line-height: 1.4;
 }
@@ -145,6 +165,7 @@ html, body {
     transition: transform 0.2s, box-shadow 0.2s;
     width: 100%;
     box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+    margin-top: 10px;
 }
 
 .confirm-btn:hover {
@@ -195,18 +216,27 @@ html, body {
 <!-- Всплывающее окно с инструкцией -->
 <div class="modal-overlay" id="instruction-modal">
     <div class="modal-card">
-        <h2>📦 Инструкция по установке</h2>
-        <p>Вы скачиваете ZIP-архив с программой. Чтобы скринсейвер работал и запускался без ошибок, обязательно следуйте правилу:</p>
+        <h2>📦 Инструкция и Безопасность</h2>
         
-        <div class="warning-box">
-            <div class="warning-title">⚠️ ВАЖНО: Важный файл внутри!</div>
-            <div class="warning-text">
-                Распакуйте <strong>всю папку целиком</strong>. Ни в коем случае <strong>не удаляйте файл "screensaver.spec"</strong>! Без него исполняемый файл приложения не сможет определить свои настройки и работать.
+        <p>Перед тем как скачать ZIP-архив с программой, пожалуйста, ознакомьтесь с информацией ниже:</p>
+
+        <div class="virus-free-box">
+            <div class="virus-title">🛡️ ПРОГРАММА НЕ СОДЕРЖИТ ВИРУСОВ!</div>
+            <div class="virus-text">
+                Это полностью чистый, самодельный проект. Из-за того, что у файла нет дорогой официальной лицензии (подписи) от Microsoft, ваш браузер или встроенный фильтр <strong>Windows SmartScreen могут выдать предупреждение</strong> при скачивании или запуске. <br><br>
+                <strong>Не паникуйте, это нормально!</strong> Просто нажмите кнопку «Подробнее» или «Сохранить в любом случае» и спокойно запускайте файл.
             </div>
         </div>
         
-        <p>После распаковки архива просто запускайте <strong>screensaver.exe</strong>.</p>
-        <button class="confirm-btn" id="start-download">Я всё понял, скачать ZIP</button>
+        <div class="warning-box">
+            <div class="warning-title">⚠️ ВАЖНО: Обязательно распакуйте архив!</div>
+            <div class="warning-text">
+                Перенесите из ZIP-архива <strong>все файлы целиком</strong> в отдельную папку. Ни при каких обстоятельствах <strong>не удаляйте файл "screensaver.spec"</strong>, иначе программа сломается и не сможет запуститься!
+            </div>
+        </div>
+        
+        <p>Для запуска скринсейвера используйте файл <strong>screensaver.exe</strong> после распаковки.</p>
+        <button class="confirm-btn" id="start-download">Я всё понял, скачать скринсейвер</button>
     </div>
 </div>
 
@@ -246,7 +276,7 @@ animateDVD();
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-const mouse = { x: null, y: null, radius: 120 }; // Слегка увеличили радиус взаимодействия с мышкой
+const mouse = { x: null, y: null, radius: 120 };
 
 function resizeCanvas() {
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -300,7 +330,6 @@ const startDownloadBtn = document.getElementById('start-download');
 let timeout;
 let isModalOpen = false;
 
-// Показываем инструкцию при клике на увеличенную кнопку
 dlBtn.addEventListener('click', () => {
     modal.classList.add('active');
     isModalOpen = true;
@@ -308,7 +337,6 @@ dlBtn.addEventListener('click', () => {
     document.body.style.cursor = 'default';
 });
 
-// Триггер скачивания ZIP-архива при подтверждении
 startDownloadBtn.addEventListener('click', () => {
     modal.classList.remove('active');
     isModalOpen = false;
@@ -323,34 +351,8 @@ startDownloadBtn.addEventListener('click', () => {
     resetTimer();
 });
 
-// Функция скрытия элементов управления при бездействии
 function resetTimer() {
     if (isModalOpen) return; 
     dlBtn.classList.remove('hide-ui');
     document.body.style.cursor = 'default';
     clearTimeout(timeout);
-    timeout = setTimeout(() => {
-        if (!isModalOpen) {
-            dlBtn.classList.add('hide-ui');
-            document.body.style.cursor = 'none';
-        }
-    }, 2500);
-}
-
-window.addEventListener('mousemove', resetTimer);
-window.addEventListener('mousedown', resetTimer);
-window.addEventListener('keydown', resetTimer);
-
-window.addEventListener("resize", () => {
-    x = Math.min(x, window.innerWidth - dvd.offsetWidth);
-    y = Math.min(y, window.innerHeight - dvd.offsetHeight);
-    resizeCanvas();
-});
-
-resizeCanvas();
-animateBackground();
-resetTimer();
-</script>
-
-</body>
-</html>
