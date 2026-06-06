@@ -23,27 +23,28 @@ html, body {
     width: 100%;
     height: 100%;
     z-index: 1;
-    pointer-events: none; /* Пропускает клики сквозь себя */
+    pointer-events: none;
 }
 
-/* Кнопка скачивания */
+/* Увеличенная и улучшенная кнопка скачивания */
 .download-btn {
     position: absolute;
-    bottom: 30px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
-    padding: 12px 28px;
-    font-size: 16px;
+    padding: 18px 45px; /* Увеличили внутренние отступы */
+    font-size: 22px;     /* Сделали шрифт больше */
     font-family: Arial, sans-serif;
-    font-weight: bold;
+    font-weight: 900;    /* Жирный шрифт */
+    letter-spacing: 1px;
     color: #fff;
     background: linear-gradient(45deg, #ff00ff, #00ffff);
     border: none;
-    border-radius: 25px;
+    border-radius: 40px; /* Округлили под новый размер */
     cursor: pointer;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-    transition: all 0.3s ease;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.5), 0 0 50px rgba(255, 0, 255, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -51,8 +52,104 @@ html, body {
 }
 
 .download-btn:hover {
-    transform: translateX(-50%) scale(1.05);
-    box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+    transform: translateX(-50%) scale(1.08); /* Чуть больше масштаб при наведении */
+    box-shadow: 0 0 35px rgba(0, 255, 255, 0.8), 0 0 70px rgba(255, 0, 255, 0.6);
+}
+
+/* Модальное окно инструкции */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-card {
+    background: #141414;
+    border: 3px solid #ff00ff;
+    border-radius: 20px;
+    padding: 35px;
+    max-width: 500px;
+    width: 90%;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    box-shadow: 0 0 40px rgba(255, 0, 255, 0.4);
+    text-align: center;
+}
+
+.modal-card h2 {
+    color: #00ffff;
+    margin-top: 0;
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.modal-card p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+/* Важная плашка с предупреждением про файл .spec */
+.warning-box {
+    background: rgba(255, 0, 85, 0.15);
+    border: 2px dashed #ff0055;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 25px 0;
+    text-align: left;
+}
+
+.warning-title {
+    color: #ff3377;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.warning-text {
+    font-size: 15px;
+    color: #ff99bb;
+    line-height: 1.4;
+}
+
+.confirm-btn {
+    background: linear-gradient(45deg, #00ffff, #ff00ff);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+}
+
+.confirm-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
 }
 
 /* Класс для плавного скрытия интерфейса */
@@ -69,28 +166,12 @@ html, body {
     font-family: Arial, sans-serif;
     user-select: none;
     white-space: nowrap;
-
-    background: linear-gradient(
-        90deg,
-        #ff0000,
-        #ff8800,
-        #ffff00,
-        #00ff00,
-        #00ffff,
-        #0000ff,
-        #ff00ff,
-        #ff0000
-    );
-
+    background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
     background-size: 400% 400%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
     animation: rainbow 6s linear infinite;
-
-    filter:
-        drop-shadow(0 0 10px rgba(255,255,255,0.8))
-        drop-shadow(0 0 25px rgba(255,255,255,0.5));
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.8)) drop-shadow(0 0 25px rgba(255,255,255,0.5));
 }
 
 @keyframes rainbow {
@@ -102,19 +183,36 @@ html, body {
 
 <body>
 
-<!-- Задний план (фигня из частиц) -->
+<!-- Задний план (частицы) -->
 <canvas id="bg-canvas"></canvas>
 
 <!-- Логотип -->
 <div id="dvd">DVD</div>
 
-<!-- Кнопка скачивания (замените 'screensaver.exe' на реальный путь к файлу) -->
-<a href="screensaver.exe" download class="download-btn" id="dl-btn">Скачать скринсейвер</a>
+<!-- Кнопка скачивания -->
+<button class="download-btn" id="dl-btn">СКАЧАТЬ СКРИНСЕЙВЕР</button>
+
+<!-- Всплывающее окно с инструкцией -->
+<div class="modal-overlay" id="instruction-modal">
+    <div class="modal-card">
+        <h2>📦 Инструкция по установке</h2>
+        <p>Вы скачиваете ZIP-архив с программой. Чтобы скринсейвер работал и запускался без ошибок, обязательно следуйте правилу:</p>
+        
+        <div class="warning-box">
+            <div class="warning-title">⚠️ ВАЖНО: Важный файл внутри!</div>
+            <div class="warning-text">
+                Распакуйте <strong>всю папку целиком</strong>. Ни в коем случае <strong>не удаляйте файл "screensaver.spec"</strong>! Без него исполняемый файл приложения не сможет определить свои настройки и работать.
+            </div>
+        </div>
+        
+        <p>После распаковки архива просто запускайте <strong>screensaver.exe</strong>.</p>
+        <button class="confirm-btn" id="start-download">Я всё понял, скачать ZIP</button>
+    </div>
+</div>
 
 <script>
 // --- КОД ДЛЯ DVD ЛОГОТИПА ---
 const dvd = document.getElementById("dvd");
-
 let x = Math.random() * (window.innerWidth - 200);
 let y = Math.random() * (window.innerHeight - 100);
 let vx = 3.2;
@@ -133,36 +231,25 @@ function randomBounce() {
 }
 
 function animateDVD() {
-    x += vx;
-    y += vy;
-
-    const w = dvd.offsetWidth;
-    const h = dvd.offsetHeight;
-
+    x += vx; y += vy;
+    const w = dvd.offsetWidth; const h = dvd.offsetHeight;
     if (x <= 0) { x = 0; vx = Math.abs(vx); randomBounce(); } 
     else if (x + w >= window.innerWidth) { x = window.innerWidth - w; vx = -Math.abs(vx); randomBounce(); }
-
     if (y <= 0) { y = 0; vy = Math.abs(vy); randomBounce(); } 
     else if (y + h >= window.innerHeight) { y = window.innerHeight - h; vy = -Math.abs(vy); randomBounce(); }
-
-    dvd.style.left = x + "px";
-    dvd.style.top = y + "px";
-
+    dvd.style.left = x + "px"; dvd.style.top = y + "px";
     requestAnimationFrame(animateDVD);
 }
 animateDVD();
 
-
-// --- КОД ЗАДНЕГО ПЛАНА (ЧАСТИЦЫ НА CANVAS) ---
+// --- КОД ЗАДНЕГО ПЛАНА (ЧАСТИЦЫ) ---
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
-
 let particles = [];
-const mouse = { x: null, y: null, radius: 100 };
+const mouse = { x: null, y: null, radius: 120 }; // Слегка увеличили радиус взаимодействия с мышкой
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     initParticles();
 }
 
@@ -176,84 +263,90 @@ class Particle {
         this.color = Math.random() > 0.5 ? '#ff00ff' : '#00ffff';
     }
     update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        // Возврат при выходе за границы
+        this.x += this.speedX; this.y += this.speedY;
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
         if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-
-        // Магия при приближении мыши
         if (mouse.x && mouse.y) {
-            let dx = mouse.x - this.x;
-            let dy = mouse.y - this.y;
+            let dx = mouse.x - this.x; let dy = mouse.y - this.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < mouse.radius) {
-                this.x -= dx * 0.02;
-                this.y -= dy * 0.02;
-            }
+            if (distance < mouse.radius) { this.x -= dx * 0.02; this.y -= dy * 0.02; }
         }
     }
     draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillStyle = this.color; ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
     }
 }
 
 function initParticles() {
     particles = [];
-    const count = Math.floor((canvas.width * canvas.height) / 8000); // Плотность частиц
-    for (let i = 0; i < count; i++) {
-        particles.push(new Particle());
-    }
+    const count = Math.floor((canvas.width * canvas.height) / 8000);
+    for (let i = 0; i < count; i++) { particles.push(new Particle()); }
 }
 
 function animateBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-        p.update();
-        p.draw();
-    });
+    particles.forEach(p => { p.update(); p.draw(); });
     requestAnimationFrame(animateBackground);
 }
 
-window.addEventListener('mousemove', (e) => {
-    mouse.x = e.x;
-    mouse.y = e.y;
-});
-window.addEventListener('mouseout', () => {
-    mouse.x = null;
-    mouse.y = null;
-});
+window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
 
-
-// --- СКРЫТИЕ КНОПКИ ПРИБЕЗДЕЙСТВИИ ---
+// --- КОД ЛОГИКИ ОКНА И СКАЧИВАНИЯ ---
 const dlBtn = document.getElementById('dl-btn');
+const modal = document.getElementById('instruction-modal');
+const startDownloadBtn = document.getElementById('start-download');
 let timeout;
+let isModalOpen = false;
 
+// Показываем инструкцию при клике на увеличенную кнопку
+dlBtn.addEventListener('click', () => {
+    modal.classList.add('active');
+    isModalOpen = true;
+    clearTimeout(timeout); 
+    document.body.style.cursor = 'default';
+});
+
+// Триггер скачивания ZIP-архива при подтверждении
+startDownloadBtn.addEventListener('click', () => {
+    modal.classList.remove('active');
+    isModalOpen = false;
+    
+    const link = document.createElement('a');
+    link.href = 'screensaver.zip'; 
+    link.download = 'screensaver.zip';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    resetTimer();
+});
+
+// Функция скрытия элементов управления при бездействии
 function resetTimer() {
+    if (isModalOpen) return; 
     dlBtn.classList.remove('hide-ui');
     document.body.style.cursor = 'default';
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-        dlBtn.classList.add('hide-ui');
-        document.body.style.cursor = 'none'; // Скрываем и курсор мыши
-    }, 2500); // Исчезнет через 2.5 секунды тишины
+        if (!isModalOpen) {
+            dlBtn.classList.add('hide-ui');
+            document.body.style.cursor = 'none';
+        }
+    }, 2500);
 }
 
 window.addEventListener('mousemove', resetTimer);
 window.addEventListener('mousedown', resetTimer);
 window.addEventListener('keydown', resetTimer);
 
-
-// Инициализация размеров при старте
 window.addEventListener("resize", () => {
     x = Math.min(x, window.innerWidth - dvd.offsetWidth);
     y = Math.min(y, window.innerHeight - dvd.offsetHeight);
     resizeCanvas();
 });
+
 resizeCanvas();
 animateBackground();
 resetTimer();
